@@ -58,7 +58,7 @@ To set up Snowflake credentials for a specific connection follow these steps.
    - Add the `default-config-file-path` parameter to the Snowflake CLI action step in your workflow file. This specifies the path to your `config.toml` file. For example:
 
      ```yaml
-     - uses: Snowflake-Labs/snowflake-cli-action@v1
+     - uses: snowflakedb/snowflake-cli-action@v1
        with:
          cli-version: "latest"
          default-config-file-path: ".\config.toml"
@@ -127,7 +127,7 @@ jobs:
           persist-credentials: false
 
         # Snowflake CLI installation
-      - uses: Snowflake-Labs/snowflake-cli-action@v1.5
+      - uses: snowflakedb/snowflake-cli-action@v1.5
         with:
           cli-version: "latest"
           default-config-file-path: "config.toml"
