@@ -61,7 +61,7 @@ To set up Snowflake credentials for a specific connection follow these steps.
      - uses: snowflakedb/snowflake-cli-action@v1
        with:
          cli-version: "latest"
-         default-config-file-path: ".\config.toml"
+         default-config-file-path: "config.toml"
      ```
 
    Replace `latest` with a specific version of Snowflake CLI action if needed.
