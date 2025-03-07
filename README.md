@@ -29,6 +29,8 @@ To set up Snowflake credentials for a specific connection follow these steps.
    - Create a `config.toml` file at the root of your repository with an empty connection configuration. For example:
 
      ```toml
+     default_connection_name = "myconnection"
+     
      [connections]
      [connections.myconnection]
      user = ""
