@@ -31,9 +31,7 @@ To set up Snowflake credentials for a specific connection follow these steps.
      ```toml
      default_connection_name = "myconnection"
      
-     [connections]
      [connections.myconnection]
-     user = ""
      ```
 
    This file serves as a template and is preferable to not contain any actual credentials.
@@ -75,7 +73,7 @@ To set up Snowflake credentials for a specific connection follow these steps.
      ```yaml
      - name: Execute Snowflake CLI command
        env:
-       PRIVATE_KEY_PASSPHRASE: ${{ secrets.PASSPHARSE }}
+         PRIVATE_KEY_PASSPHRASE: ${{ secrets.PASSPHARSE }}
        run: |
          snow --version
          snow connection test
@@ -101,9 +99,7 @@ For more information in setting Snowflake credentials using environment variable
 ```
 default_connection_name = "myconnection"
 
-[connections]
 [connections.myconnection]
-user = ""
 ```
 
 ### YAML file
@@ -111,16 +107,11 @@ user = ""
 ```yaml
 name: deploy
 on: [push]
+
 jobs:
   version:
     name: "Check Snowflake CLI version"
     runs-on: ubuntu-latest
-    env:
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.SNOWFLAKE_USER }}
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
-
     steps:
       # Checkout step is necessary if you want to use a config file from your repo
       - name: Checkout repo
@@ -137,7 +128,11 @@ jobs:
         # Use the CLI
       - name: Execute Snowflake CLI command
         env:
-          PRIVATE_KEY_PASSPHRASE: ${{ secrets.PASSPHARSE }} #Passphrase is only necessary if private key is encrypted.
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
+          PRIVATE_KEY_PASSPHRASE: ${{ secrets.PASSPHARSE }} # Passphrase is only necessary if private key is encrypted.
         run: |
           snow --version
           snow connection test

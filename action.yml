@@ -12,6 +12,7 @@ inputs:
     default: 'latest'
 
   default-config-file-path:
+    description: 'Path to the default config file'
     required: false
     default: './config.toml'
 

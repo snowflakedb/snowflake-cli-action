@@ -1,14 +1,14 @@
-﻿name: compare-versions-pip-and-pipx
+﻿name: test-compare-versions-pip-and-pipx
 
 on:
     push:
       branches:
         - '*' 
     schedule:
-      - cron: "0 0 * * *"  
+      - cron: "0 0 * * *"
 
 jobs:
-  compare-versions-pip-and-pipx:
+  test-compare-versions-pip-and-pipx:
     runs-on: ${{ matrix.os }}
 
     strategy:

@@ -1,0 +1,37 @@
+﻿name: test-empty-pipx-bin-dir
+on: [push]
+
+jobs:
+  test-empty-pipx-bin-dir:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+
+    env:
+      PIPX_BIN_DIR: ""
+
+    name: Install Snowflake CLI in ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Snowflake CLI
+        uses: ./
+        id: setup_snowcli
+        with:
+          default-config-file-path: '.github/workflows/tests-files/config.toml'
+
+      - name: List connections
+        env:
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: 'account'
+        shell: bash
+        run: |
+          snow --version
+          snow connection list
