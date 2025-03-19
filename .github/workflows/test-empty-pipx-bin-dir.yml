@@ -1,5 +1,5 @@
 ﻿name: test-empty-pipx-bin-dir
-on: [push]
+on:
 
 jobs:
   test-empty-pipx-bin-dir:

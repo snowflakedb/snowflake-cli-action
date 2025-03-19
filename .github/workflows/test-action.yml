@@ -1,0 +1,19 @@
+﻿name: test-action
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+
+    name: Install Snowflake CLI
+    steps:
+      - uses: snowflakedb/snowflake-cli-action@v1.5
+
+        # Use the CLI
+      - name: Execute Snowflake CLI command
+        run: |
+          snow --help

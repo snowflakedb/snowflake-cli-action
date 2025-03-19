@@ -1,6 +1,6 @@
 ﻿name: test-install-snowcli-with-pipx-first-then-with-pip
 
-on: [push]
+on:
 
 jobs:
   test-install-snowcli-with-pipx-first-then-with-pip:
