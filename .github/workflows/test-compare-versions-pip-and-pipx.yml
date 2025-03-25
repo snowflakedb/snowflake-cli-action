@@ -1,14 +1,14 @@
-﻿name: compare-versions-pip-and-pipx
+﻿name: test-compare-versions-pip-and-pipx
 
 on:
     push:
       branches:
         - '*' 
     schedule:
-      - cron: "0 0 * * *"  
+      - cron: "0 0 * * *"
 
 jobs:
-  compare-versions-pip-and-pipx:
+  test-compare-versions-pip-and-pipx:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -42,8 +42,6 @@ jobs:
       - name: Install Snowflake CLI with pipx
         uses: ./ 
         id: setup_snowcli
-        with:
-          default-config-file-path: '.github/workflows/tests-files/config.toml'
           
       - name: Compare pipx and pip versions
         shell: bash

@@ -1,9 +1,9 @@
-﻿name: install-snowcli-with-pip-first-and-then-with-pipx
+﻿name: test-install-snowcli-with-pip-first-then-with-pipx
 
 on: [push]
 
 jobs:
-  install-snowcli-with-pip-first-and-then-with-pipx:
+  test-install-snowcli-with-pip-first-then-with-pipx:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -29,9 +29,7 @@ jobs:
       - name: Install Snowflake CLI with pipx
         uses: ./ 
         id: setup_snowcli
-        with:
-          default-config-file-path: '.github/workflows/tests-files/config.toml'
-          
+
       - name: Test snow installation
         shell: bash
         run: |

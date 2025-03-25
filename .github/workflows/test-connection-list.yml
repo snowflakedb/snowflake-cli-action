@@ -1,0 +1,35 @@
+﻿name: test-connection-list
+
+on:
+  push:
+    branches:
+      - '*' 
+  schedule:
+    - cron: "0 0 * * *"  
+
+jobs:
+  test-connection-list:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+
+    name: Install Snowflake CLI in ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Snowflake CLI
+        uses: ./
+        id: setup_snowcli
+
+      - name: List connections
+        shell: bash
+        run: |
+          snow -h
