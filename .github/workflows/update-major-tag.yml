@@ -1,0 +1,28 @@
+# Based on https://github.com/actions/checkout/blob/main/.github/workflows/update-main-version.yml
+name: Update major tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The new version tag
+        required: true
+      major_tag:
+        type: choice
+        description: The major tag to update
+        options:
+          - v1
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Update tag
+        run: git tag -f ${{ github.event.inputs.major_tag }} ${{ github.event.inputs.tag }}
+      - name: Push tag
+        run: git push origin ${{ github.event.inputs.major_tag }} --force
