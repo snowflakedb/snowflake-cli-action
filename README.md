@@ -4,7 +4,7 @@
 
 ## Usage
 
-Snowflake CLI Github Actions streamlines installing and using [Snowflake CLI](https://docs.snowflake.com/developer-guide/snowflake-cli-v2/index) in your CI/CD workflows. The CLI is installed in
+Snowflake CLI Github Actions streamline installing and using [Snowflake CLI](https://docs.snowflake.com/developer-guide/snowflake-cli-v2/index) in your CI/CD workflows. The CLI is installed in
 isolated way, making sure it won't conflict with dependencies of your project. It automatically sets up
 the input configuration file within the `~/.snowflake/` directory.
 
@@ -34,11 +34,11 @@ These steps are a prerequisite for both methods:
 
 ### Use a temporary connection
 
-To set up Snowflake credentials for a specific connection, follow these steps.
+To set up Snowflake credentials for a temporary connection, follow these steps.
 
 1.  **Map secrets to environment variables**:
 
-    Map each secret to an environment variable using the format `SNOWFLAKE_<key>=<value>`. For example:
+    Map each secret to an [environment variable](https://docs.snowflake.com/en/developer-guide/snowflake-cli/connecting/configure-connections#use-environment-variables-for-snowflake-credentials) using the format `SNOWFLAKE_<key>=<value>`. For example:
 
     ```yaml
     env:
