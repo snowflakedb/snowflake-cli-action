@@ -14,11 +14,11 @@ The action enables automation of your Snowflake CLI tasks, such as deploying Nat
 
 ### `cli-version`
 
-The specified Snowflake CLI version. For example `3.6.0`. If not provided, the latest version of the Snowflake CLI is used.
+The specified Snowflake CLI version, for example `3.6.0`. If not provided, the latest version of the Snowflake CLI is used.
 
 ### `default-config-file-path`
 
-Path to the configuration file (`config.toml`) in your repository. The path must be relative to root of repository. The configuration file is not required when using a temporary connection (`-x` flag).
+Path to the configuration file (`config.toml`) in your repository. The path must be relative to root of repository. The configuration file is not required when using a temporary connection (`-x` flag). Refer to the [Snowflake CLI documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli/connecting/configure-connections#use-a-temporary-connection) for more details.
 
 ## Safely configure the action in your CI/CD workflow
 
@@ -67,7 +67,7 @@ To set up Snowflake credentials for a specific connection, follow these steps.
         PRIVATE_KEY_PASSPHRASE: ${{ secrets.PASSPHARSE }}
       run: |
         snow --version
-        snow connection test
+        snow connection test -x
     ```
 
 4.  **[Extra] Use a password instead of a private key**:
