@@ -13,11 +13,9 @@ mkdir -p "${PIPX_BIN_DIR}"
 
 
 if [ "$CLI_VERSION" == "latest" ]; then
-    pipx install snowflake-cli --python "$PYTHON_PATH"
+    pipx install snowflake-cli==3.7.2 --python "$PYTHON_PATH"
 else 
     pipx install snowflake-cli=="$CLI_VERSION" --python "$PYTHON_PATH"
 fi
-
-pipx list
 
 echo "$PIPX_BIN_DIR" >> "$GITHUB_PATH"
