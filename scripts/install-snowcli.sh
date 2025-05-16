@@ -18,6 +18,6 @@ else
     pipx install snowflake-cli=="$CLI_VERSION" --python "$PYTHON_PATH"
 fi
 
-pip freeze
+pipx list
 
 echo "$PIPX_BIN_DIR" >> "$GITHUB_PATH"
