@@ -23,4 +23,6 @@ echo $PIPX_HOME
 
 pipx list
 
+ls /Users/runner/.local/pipx/venvs
+
 echo "$PIPX_BIN_DIR" >> "$GITHUB_PATH"
