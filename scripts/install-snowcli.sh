@@ -18,6 +18,8 @@ else
     pipx install snowflake-cli=="$CLI_VERSION" --python "$PYTHON_PATH"
 fi
 
+pipx ensurepath
+
 echo $PIPX_BIN_DIR
 echo $PIPX_HOME
 
