@@ -23,6 +23,8 @@ echo $PIPX_HOME
 
 pipx list
 
-ls /opt/pipx/venvs
+source /Users/runner/.local/pipx/venvs/snowflake-cli/bin/activate
+
+pip freeze
 
 echo "$PIPX_BIN_DIR" >> "$GITHUB_PATH"
