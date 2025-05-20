@@ -1,6 +1,8 @@
 # Snowflake CLI Github Actions
 
 
+
+
 **Note:** Snowflake CLI Github Actions is in Preview.
 
 ## Usage
