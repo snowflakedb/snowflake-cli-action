@@ -13,7 +13,7 @@ mkdir -p "${PIPX_BIN_DIR}"
 
 
 if [ "${INSTALL_FROM_GITHUB:-false}" == "true" ]; then
-    REF="${GITHUB_REF:-main}"
+    REF="${CUSTOM_GITHUB_REF:-main}"
     pipx install \
         --python "$PYTHON_PATH" \
         --force \
