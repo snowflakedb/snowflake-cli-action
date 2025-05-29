@@ -1,0 +1,29 @@
+name: test-install-snowcli-from-github-prerelease
+on: [push]
+
+jobs:
+  test-install-from-github-prerelease:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+    name: Install Snowflake CLI from GitHub pre-release v3.9.0-rc1 in ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Snowflake CLI from GitHub pre-release
+        uses: ./
+        id: setup_snowcli_github_prerelease
+        with:
+          install-from-github: true
+          github-ref: "v3.9.0-rc1"
+      - name: Test snow installation from GitHub pre-release
+        shell: bash
+        run: |
+          snow --version
+          snow -h 

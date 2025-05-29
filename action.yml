@@ -11,6 +11,16 @@ inputs:
     required: false
     default: 'latest'
 
+  install-from-github:
+    description: 'Install Snowflake CLI from GitHub repository (true/false)'
+    required: false
+    default: 'false'
+
+  github-ref:
+    description: 'GitHub branch, tag, or commit to install from (used if install-from-github is true)'
+    required: false
+    default: 'main'
+
   default-config-file-path:
     description: 'Path to the default config file'
     required: false
@@ -24,6 +34,9 @@ runs:
       run: bash $GITHUB_ACTION_PATH/scripts/install-snowcli.sh
       env:
         CLI_VERSION: ${{ inputs.cli-version }} 
+        INSTALL_FROM_GITHUB: ${{ inputs.install-from-github }}
+        GITHUB_REF: ${{ inputs.github-ref }}
+        GITHUB_REPO: ${{ inputs.github-repo }}
 
     - name: Set up config.toml
       shell: bash

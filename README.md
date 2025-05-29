@@ -16,6 +16,14 @@ The action enables automation of your Snowflake CLI tasks, such as deploying Nat
 
 The specified Snowflake CLI version, for example `3.6.0`. If not provided, the latest version of the Snowflake CLI is used.
 
+### `install-from-github`
+
+Set to `true` to install Snowflake CLI directly from a GitHub repository (for example, to use a specific branch, tag, or commit). Default is `false`.
+
+### `github-ref`
+
+The branch, tag, or commit to install from if `install-from-github` is `true`. Default is `main`.
+
 ### `default-config-file-path`
 
 Path to the configuration file (`config.toml`) in your repository. The path must be relative to root of repository. The configuration file is not required when using a temporary connection (`-x` flag). Refer to the [Snowflake CLI documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli/connecting/configure-connections#use-a-temporary-connection) for more details.
@@ -225,3 +233,17 @@ jobs:
           snow --help
           snow connection test
 ```
+
+### Install from a GitHub branch or tag
+
+To install Snowflake CLI from a specific branch, tag, or commit in the GitHub repository (for example, to test unreleased features or a fork), use the following configuration:
+
+```yaml
+- uses: snowflakedb/snowflake-cli-action@v1
+  with:
+    install-from-github: true
+    github-ref: "feature/my-branch"   # or a tag/commit hash
+    github-repo: "snowflakedb/snowflake-cli" # or your fork
+```
+
+This will install the CLI from the specified branch, tag, or commit. You can combine this with other inputs as needed.

@@ -12,7 +12,13 @@ export PIPX_BIN_DIR=${PIPX_BIN_DIR:-"${HOME}/.local/bin"}/$PIPX_PATH
 mkdir -p "${PIPX_BIN_DIR}"
 
 
-if [ "$CLI_VERSION" == "latest" ]; then
+if [ "${INSTALL_FROM_GITHUB:-false}" == "true" ]; then
+    REF="${GITHUB_REF:-main}"
+    pipx install \
+        --python "$PYTHON_PATH" \
+        --force \
+        "git+https://github.com/snowflakedb/snowflake-cli.git@${REF}"
+elif [ "$CLI_VERSION" == "latest" ]; then
     pipx install snowflake-cli --python "$PYTHON_PATH"
 else 
     pipx install snowflake-cli=="$CLI_VERSION" --python "$PYTHON_PATH"
