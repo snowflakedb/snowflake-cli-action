@@ -36,7 +36,6 @@ runs:
         CLI_VERSION: ${{ inputs.cli-version }} 
         INSTALL_FROM_GITHUB: ${{ inputs.install-from-github }}
         GITHUB_REF: ${{ inputs.github-ref }}
-        GITHUB_REPO: ${{ inputs.github-repo }}
 
     - name: Set up config.toml
       shell: bash

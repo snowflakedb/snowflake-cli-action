@@ -243,7 +243,6 @@ To install Snowflake CLI from a specific branch, tag, or commit in the GitHub re
   with:
     install-from-github: true
     github-ref: "feature/my-branch"   # or a tag/commit hash
-    github-repo: "snowflakedb/snowflake-cli" # or your fork
 ```
 
 This will install the CLI from the specified branch, tag, or commit. You can combine this with other inputs as needed.
