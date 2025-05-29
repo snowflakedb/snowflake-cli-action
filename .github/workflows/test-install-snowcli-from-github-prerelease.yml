@@ -21,7 +21,7 @@ jobs:
         id: setup_snowcli_github_prerelease
         with:
           install-from-github: true
-          github-ref: "v3.9.0-rc1"
+          custom-github-ref: "v3.9.0-rc1"
       - name: Test snow installation from GitHub pre-release
         shell: bash
         run: |

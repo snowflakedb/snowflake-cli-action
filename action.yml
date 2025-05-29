@@ -16,7 +16,7 @@ inputs:
     required: false
     default: 'false'
 
-  github-ref:
+  custom-github-ref:
     description: 'GitHub branch, tag, or commit to install from (used if install-from-github is true)'
     required: false
     default: 'main'
@@ -35,7 +35,7 @@ runs:
       env:
         CLI_VERSION: ${{ inputs.cli-version }} 
         INSTALL_FROM_GITHUB: ${{ inputs.install-from-github }}
-        GITHUB_REF: ${{ inputs.github-ref }}
+        CUSTOM_GITHUB_REF: ${{ inputs.custom-github-ref }}
 
     - name: Set up config.toml
       shell: bash
