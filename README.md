@@ -16,13 +16,11 @@ The action enables automation of your Snowflake CLI tasks, such as deploying Nat
 
 The specified Snowflake CLI version, for example `3.6.0`. If not provided, the latest version of the Snowflake CLI is used.
 
-### `install-from-github`
-
-Set to `true` to install Snowflake CLI directly from a GitHub repository (for example, to use a specific branch, tag, or commit). Default is `false`.
-
 ### `custom-github-ref`
 
-The branch, tag, or commit to install from if `install-from-github` is `true`. Default is `main`.
+The branch, tag, or commit to install from if you want to install the CLI directly from GitHub.
+
+> **Note:** `cli-version` and `custom-github-ref` cannot be used together. Please specify only one of these arguments at a time.
 
 ### `default-config-file-path`
 
@@ -241,7 +239,6 @@ To install Snowflake CLI from a specific branch, tag, or commit in the GitHub re
 ```yaml
 - uses: snowflakedb/snowflake-cli-action@v1
   with:
-    install-from-github: true
     custom-github-ref: "feature/my-branch"   # or a tag/commit hash
 ```
 
