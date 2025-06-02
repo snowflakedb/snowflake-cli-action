@@ -38,4 +38,4 @@ jobs:
             echo "Expected 'dev' in version string, got: $version_output"
             exit 1
           fi
-          snow -h 
+          snow -h
