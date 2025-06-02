@@ -7,23 +7,29 @@ branding:
   
 inputs:
   cli-version:
-    description: 'Snowflake CLI version'
+    description: 'Snowflake CLI version (by default, installs the latest version)'
     required: false
-    default: 'latest'
 
   default-config-file-path:
     description: 'Path to the default config file'
     required: false
     default: './config.toml'
 
+  custom-github-ref:
+    description: 'GitHub branch, tag, or commit to install from (if set, installs from GitHub; otherwise, installs from PyPI)'
+    required: false
+
 runs:
   using: 'composite'
   steps:
-    - name: Download snowflake-cli ${{ inputs.cli_version }}
+    - name: >
+        Download snowflake-cli
+        ${{ inputs.custom-github-ref && format('from git ref {0}', inputs.custom-github-ref) || (inputs.cli-version && format('version {0}', inputs.cli-version) || 'latest version') }}
       shell: bash
       run: bash $GITHUB_ACTION_PATH/scripts/install-snowcli.sh
       env:
         CLI_VERSION: ${{ inputs.cli-version }} 
+        CUSTOM_GITHUB_REF: ${{ inputs.custom-github-ref }}
 
     - name: Set up config.toml
       shell: bash

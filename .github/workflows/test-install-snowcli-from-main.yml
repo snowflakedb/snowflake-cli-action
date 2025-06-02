@@ -1,0 +1,41 @@
+name: test-install-snowcli-from-main
+on: [push]
+
+jobs:
+  test-install-from-github-prerelease:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        python-version:
+          - '3.10'
+          - '3.13'
+    name: Install Snowflake CLI from main branch in ${{ matrix.os }} with Python ${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up Snowflake CLI from GitHub main branch
+        uses: ./
+        id: setup_snowcli_github_main
+        with:
+          custom-github-ref: "main"
+      - name: Test snow installation from GitHub main branch
+        shell: bash
+        run: |
+          set -e
+          version_output=$(snow --version)
+          echo "$version_output"
+          if [[ "$version_output" != *dev* ]]; then
+            echo "Expected 'dev' in version string, got: $version_output"
+            exit 1
+          fi
+          snow -h
