@@ -1,4 +1,4 @@
-name: test-install-snowcli-from-github-prerelease
+name: test-install-snowcli-from-main
 on: [push]
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
           - '3.11'
           - '3.12'
           - '3.13'
-    name: Install Snowflake CLI from GitHub pre-release v3.9.0-rc1 in ${{ matrix.os }} with Python ${{ matrix.python-version }}
+    name: Install Snowflake CLI from main branch in ${{ matrix.os }} with Python ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,14 +25,19 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Set up Snowflake CLI from GitHub pre-release
+      - name: Set up Snowflake CLI from GitHub main branch
         uses: ./
-        id: setup_snowcli_github_prerelease
+        id: setup_snowcli_github_main
         with:
-          install-from-github: true
-          custom-github-ref: "v3.9.0-rc1"
-      - name: Test snow installation from GitHub pre-release
+          custom-github-ref: "main"
+      - name: Test snow installation from GitHub main branch
         shell: bash
         run: |
-          snow --version
+          set -e
+          version_output=$(snow --version)
+          echo "$version_output"
+          if [[ "$version_output" != *dev* ]]; then
+            echo "Expected 'dev' in version string, got: $version_output"
+            exit 1
+          fi
           snow -h 
