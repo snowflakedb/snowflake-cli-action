@@ -12,6 +12,7 @@ dist/
 ./.packages
 .coverage
 /venv/
+.cursor/*
 
 ^app.zip
 ^snowflake.yml

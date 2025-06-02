@@ -17,9 +17,8 @@ inputs:
     default: 'false'
 
   custom-github-ref:
-    description: 'GitHub branch, tag, or commit to install from (used if install-from-github is true)'
+    description: 'GitHub branch, tag, or commit to install from (if set, installs from GitHub; otherwise, installs from PyPI)'
     required: false
-    default: 'main'
 
   default-config-file-path:
     description: 'Path to the default config file'
@@ -34,7 +33,6 @@ runs:
       run: bash $GITHUB_ACTION_PATH/scripts/install-snowcli.sh
       env:
         CLI_VERSION: ${{ inputs.cli-version }} 
-        INSTALL_FROM_GITHUB: ${{ inputs.install-from-github }}
         CUSTOM_GITHUB_REF: ${{ inputs.custom-github-ref }}
 
     - name: Set up config.toml
