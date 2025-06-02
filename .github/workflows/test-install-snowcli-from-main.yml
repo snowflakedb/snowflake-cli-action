@@ -13,8 +13,6 @@ jobs:
           - windows-latest
         python-version:
           - '3.10'
-          - '3.11'
-          - '3.12'
           - '3.13'
     name: Install Snowflake CLI from main branch in ${{ matrix.os }} with Python ${{ matrix.python-version }}
     steps:
