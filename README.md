@@ -235,9 +235,10 @@ jobs:
 ### Install from a GitHub branch or tag
 
 To install Snowflake CLI from a specific branch, tag, or commit in the GitHub repository (for example, to test unreleased features or a fork), use the following configuration:
+This feature is available from snowflake-cli-action v1.6
 
 ```yaml
-- uses: snowflakedb/snowflake-cli-action@v1
+- uses: snowflakedb/snowflake-cli-action@v1.6
   with:
     custom-github-ref: "feature/my-branch"   # or a tag/commit hash
 ```
