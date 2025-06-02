@@ -9,7 +9,6 @@ inputs:
   cli-version:
     description: 'Snowflake CLI version'
     required: false
-    default: 'latest'
 
   install-from-github:
     description: 'Install Snowflake CLI from GitHub repository (true/false)'
