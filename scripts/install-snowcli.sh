@@ -22,7 +22,7 @@ if [ -n "${CUSTOM_GITHUB_REF:-}" ]; then
         --python "$PYTHON_PATH" \
         --force \
         "git+https://github.com/snowflakedb/snowflake-cli.git@${CUSTOM_GITHUB_REF}"
-elif [ -n "${CLI_VERSION:-}" ]; then
+elif [ -n "${CLI_VERSION:-}" ] && [ "${CLI_VERSION}" != "latest" ]; then
     pipx install snowflake-cli=="$CLI_VERSION" --python "$PYTHON_PATH"
 else
     pipx install snowflake-cli --python "$PYTHON_PATH"
