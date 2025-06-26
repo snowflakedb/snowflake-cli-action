@@ -22,6 +22,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: add extra telemetry data
+      shell: bash
+      run: echo "SF_GITHUB_ACTION=true" >> "$GITHUB_ENV"
+
     - name: >
         Download snowflake-cli
         ${{ inputs.custom-github-ref && format('from git ref {0}', inputs.custom-github-ref) || (inputs.cli-version && format('version {0}', inputs.cli-version) || 'latest version') }}
@@ -35,4 +39,4 @@ runs:
       shell: bash
       run: bash $GITHUB_ACTION_PATH/scripts/setup-config-file.sh
       env:
-        CONFIG_FILE_PATH: ${{ inputs.default-config-file-path }} 
+        CONFIG_FILE_PATH: ${{ inputs.default-config-file-path }}
