@@ -49,7 +49,11 @@ runs:
       env:
         CLI_VERSION: ${{ inputs.cli-version }} 
         CUSTOM_GITHUB_REF: ${{ inputs.custom-github-ref }}
-
+    - name: Set up config.toml
+      shell: bash
+      run: bash $GITHUB_ACTION_PATH/scripts/setup-config-file.sh
+      env:
+        CONFIG_FILE_PATH: ${{ inputs.default-config-file-path }}
     - name: Set up workload identity authentication
       if: ${{ inputs.use-workload-identity == 'true' }}
       shell: bash
@@ -64,8 +68,3 @@ runs:
         TOKEN_VALUE=$(snow auth workload-identity read --type=github)
         echo "${TOKEN_NAME_UPPER}=${TOKEN_VALUE}" >> "$GITHUB_ENV"
 
-    - name: Set up config.toml
-      shell: bash
-      run: bash $GITHUB_ACTION_PATH/scripts/setup-config-file.sh
-      env:
-        CONFIG_FILE_PATH: ${{ inputs.default-config-file-path }}
