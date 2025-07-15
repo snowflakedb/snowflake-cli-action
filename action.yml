@@ -60,7 +60,7 @@ runs:
       env:
         SNOWFLAKE_AUDIENCE: ${{ inputs.oidc-audience }}
       run: |
-        echo "SF_ENABLE_EXPERIMENTAL_AUTHENITCATION=true" >> "$GITHUB_ENV"
+        echo "SF_ENABLE_EXPERIMENTAL_AUTHENTICATION=true" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUDIENCE=${{ inputs.oidc-audience }}" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUTHENTICATOR=WORKLOAD_IDENTITY" >> "$GITHUB_ENV"
         TOKEN_NAME="${{ inputs.workload-identity-token-name }}"
