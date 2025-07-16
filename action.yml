@@ -57,15 +57,9 @@ runs:
     - name: Set up workload identity authentication
       if: ${{ inputs.use-workload-identity == 'true' }}
       shell: bash
-      env:
-        SNOWFLAKE_AUDIENCE: ${{ inputs.oidc-audience }}
       run: |
         echo "SF_ENABLE_EXPERIMENTAL_AUTHENTICATION=true" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUDIENCE=${{ inputs.oidc-audience }}" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUTHENTICATOR=WORKLOAD_IDENTITY" >> "$GITHUB_ENV"
-        TOKEN_NAME="${{ inputs.workload-identity-token-name }}"
-        TOKEN_NAME_UPPER=$(echo "$TOKEN_NAME" | tr '[:lower:]' '[:upper:]')
-        snow auth workload-identity read --debug
-        TOKEN_VALUE=$(snow auth workload-identity read --type=github)
-        echo "${TOKEN_NAME_UPPER}=${TOKEN_VALUE}" >> "$GITHUB_ENV"
-
+        TOKEN_NAME_UPPER=$(echo ${{ inputs.workload-identity-token-name }} | tr '[:lower:]' '[:upper:]')
+        echo "${TOKEN_NAME_UPPER}=$(snow auth workload-identity read --type=github)" >> "$GITHUB_ENV"
