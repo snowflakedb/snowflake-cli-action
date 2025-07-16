@@ -34,9 +34,25 @@ inputs:
     required: false
     default: 'snowflakecomputing.com'
 
+  python-version:
+    description: 'Python version to set up'
+    required: false
+    default: '3.10'
+
+  skip-python-setup:
+    description: 'Skip Python setup and use pre-installed Python'
+    required: false
+    default: 'false'
+
 runs:
   using: 'composite'
   steps:
+    - name: Set up Python
+      if: ${{ inputs.skip-python-setup != 'true' }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
     - name: add extra telemetry data
       shell: bash
       run: echo "SF_GITHUB_ACTION=true" >> "$GITHUB_ENV"
