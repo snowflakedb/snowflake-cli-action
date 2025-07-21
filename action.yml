@@ -78,4 +78,4 @@ runs:
         echo "SNOWFLAKE_AUDIENCE=${{ inputs.oidc-audience }}" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUTHENTICATOR=WORKLOAD_IDENTITY" >> "$GITHUB_ENV"
         TOKEN_NAME_UPPER=$(echo ${{ inputs.workload-identity-token-name }} | tr '[:lower:]' '[:upper:]')
-        echo "${TOKEN_NAME_UPPER}=$(snow auth workload-identity read --type=github)" >> "$GITHUB_ENV"
+        echo "${TOKEN_NAME_UPPER}=$(snow auth workload-identity read-token --type=github)" >> "$GITHUB_ENV"
