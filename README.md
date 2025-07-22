@@ -22,13 +22,74 @@ The branch, tag, or commit to install from if you want to install the CLI direct
 
 > **Note:** `cli-version` and `custom-github-ref` cannot be used together. Please specify only one of these arguments at a time.
 
+### `use-workload-identity`
+
+Boolean flag to enable workload identity federation for authentication. When set to `true`, the action will configure the CLI to use GitHub's OIDC token for authentication with Snowflake, eliminating the need for storing private keys as secrets. Default is `false`.
+
+### `python-version`
+
+The Python version to use when installing the Snowflake CLI. For example `3.10`. If not provided, the default Python version available in the runner environment is used.
+
 ### `default-config-file-path`
 
 Path to the configuration file (`config.toml`) in your repository. The path must be relative to root of repository. The configuration file is not required when using a temporary connection (`-x` flag). Refer to the [Snowflake CLI documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli/connecting/configure-connections#use-a-temporary-connection) for more details.
 
 ## Safely configure the action in your CI/CD workflow
 
-These steps are a prerequisite for both methods:
+### Use workload identity (Recommended)
+
+Workload identity federation provides a secure and modern way to authenticate with Snowflake without storing private keys as secrets. This approach uses GitHub's OIDC (OpenID Connect) token to authenticate with Snowflake.
+
+> **Note:** This is the recommended authentication method as it eliminates the need to manage and rotate private keys, reducing security risks.
+
+To set up workload identity federation, follow these steps:
+
+1. **Configure workload identity federation in Snowflake**:
+
+   Follow the [Snowflake documentation](https://docs.snowflake.com/en/user-guide/oauth-oidc) to set up workload identity federation for your Snowflake account and configure the GitHub OIDC provider.
+
+2. **Store your Snowflake account in GitHub secrets**:
+
+   Store your Snowflake account identifier in GitHub Secrets. Refer to the [GitHub Actions documentation](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) for detailed instructions.
+
+3. **Configure the Snowflake CLI Action with workload identity**:
+
+   ```yaml
+   name: Snowflake WIF
+   on: [push]
+   
+   permissions:
+     id-token: write
+   
+   jobs:
+     federated-job:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+           with:
+             persist-credentials: false
+         - name: Setup Snowflake cli
+           uses: snowflakedb/snowflake-cli-action@v2.0
+           with:
+             use-workload-identity: true
+             python-version: "3.10"
+         - name: test connection
+           env:
+             SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+           run: snow connection test -x
+   ```
+
+4. **Ensure proper repository permissions**:
+
+   Make sure your GitHub repository has the necessary permissions to generate OIDC tokens. This is typically configured automatically when using workload identity federation.
+
+### Alternative authentication methods
+
+The following methods can be used as alternatives to workload identity federation:
+
+#### Prerequisites for key-based authentication
+
+These steps are a prerequisite for both key-based methods:
 
 1. **Generate a private key**:
 
@@ -38,7 +99,7 @@ These steps are a prerequisite for both methods:
 
    Store each credential, such as account, private key, and passphrase in GitHub Secrets. Refer to the [GitHub Actions documentation](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) for detailed instructions on how to create and manage secrets for your repository.
 
-### Use a temporary connection
+#### Use a temporary connection
 
 To set up Snowflake credentials for a temporary connection, follow these steps.
 
@@ -91,7 +152,7 @@ To set up Snowflake credentials for a temporary connection, follow these steps.
 
 For more information in setting Snowflake credentials using environment variables, refer to the [Snowflake CLI documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli-v2/connecting/specify-credentials#how-to-use-environment-variables-for-snowflake-credentials). And the instructions on defining environment variables within your Github CI/CD workflow can be found [here](https://docs.github.com/en/actions/learn-github-actions/variables#defining-environment-variables-for-a-single-workflow).
 
-### Use a configuration file
+#### Use a configuration file
 
 To set up Snowflake credentials for a specific connection, follow these steps.
 
