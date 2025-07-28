@@ -1,51 +1,51 @@
 ﻿# action.yml
-name: 'Install Snowflake CLI'
-description: 'Download and install snowflake-cli through pipx'
+name: "Install Snowflake CLI"
+description: "Download and install snowflake-cli through pipx"
 branding:
-  icon: 'terminal'
-  color: 'blue'
-  
+  icon: "terminal"
+  color: "blue"
+
 inputs:
   cli-version:
-    description: 'Snowflake CLI version (by default, installs the latest version)'
+    description: "Snowflake CLI version (by default, installs the latest version)"
     required: false
 
   default-config-file-path:
-    description: 'Path to the default config file'
+    description: "Path to the default config file"
     required: false
-    default: './config.toml'
+    default: "./config.toml"
 
   custom-github-ref:
-    description: 'GitHub branch, tag, or commit to install from (if set, installs from GitHub; otherwise, installs from PyPI)'
+    description: "GitHub branch, tag, or commit to install from (if set, installs from GitHub; otherwise, installs from PyPI)"
     required: false
 
   use-workload-identity:
-    description: 'Enable workload identity authentication'
+    description: "Enable workload identity authentication"
     required: false
-    default: 'false'
+    default: "false"
 
   workload-identity-token-name:
-    description: 'Name of the token environment variable for workload identity'
+    description: "Name of the token environment variable for workload identity"
     required: false
-    default: 'SNOWFLAKE_TOKEN'
+    default: "SNOWFLAKE_TOKEN"
 
   oidc-audience:
-    description: 'OIDC audience for workload identity authentication'
+    description: "OIDC audience for workload identity authentication"
     required: false
-    default: 'snowflakecomputing.com'
+    default: "snowflakecomputing.com"
 
   python-version:
-    description: 'Python version to set up'
+    description: "Python version to set up"
     required: false
-    default: '3.10'
+    default: "3.10"
 
   skip-python-setup:
-    description: 'Skip Python setup and use pre-installed Python'
+    description: "Skip Python setup and use pre-installed Python"
     required: false
-    default: 'false'
+    default: "false"
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Set up Python
       if: ${{ inputs.skip-python-setup != 'true' }}
@@ -63,7 +63,7 @@ runs:
       shell: bash
       run: bash $GITHUB_ACTION_PATH/scripts/install-snowcli.sh
       env:
-        CLI_VERSION: ${{ inputs.cli-version }} 
+        CLI_VERSION: ${{ inputs.cli-version }}
         CUSTOM_GITHUB_REF: ${{ inputs.custom-github-ref }}
     - name: Set up config.toml
       shell: bash
@@ -79,3 +79,4 @@ runs:
         echo "SNOWFLAKE_AUTHENTICATOR=WORKLOAD_IDENTITY" >> "$GITHUB_ENV"
         TOKEN_NAME_UPPER=$(echo ${{ inputs.workload-identity-token-name }} | tr '[:lower:]' '[:upper:]')
         echo "${TOKEN_NAME_UPPER}=$(snow auth workload-identity read-token --type=github)" >> "$GITHUB_ENV"
+
