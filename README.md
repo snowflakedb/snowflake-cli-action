@@ -36,33 +36,31 @@ Path to the configuration file (`config.toml`) in your repository. The path must
 
 ## Safely configure the action in your CI/CD workflow
 
-### Use workload identity (Recommended)
+### Use OIDC authentication
 
-Workload identity federation provides a secure and modern way to authenticate with Snowflake without storing private keys as secrets. This approach uses GitHub's OIDC (OpenID Connect) token to authenticate with Snowflake.
+OIDC authentication provides a secure and modern way to authenticate with Snowflake without storing private keys as secrets. This approach uses GitHub's OIDC (OpenID Connect) token to authenticate with Snowflake.
 
-> **Note:** This is the recommended authentication method as it eliminates the need to manage and rotate private keys, reducing security risks.
+To set up OIDC authentication, follow these steps:
 
-To set up workload identity federation, follow these steps:
+1. **Configure OIDC authentication in Snowflake**:
 
-1. **Configure workload identity federation in Snowflake**:
-
-   Follow the [Snowflake documentation](https://docs.snowflake.com/en/user-guide/oauth-oidc) to set up workload identity federation for your Snowflake account and configure the GitHub OIDC provider.
+   Follow the [Snowflake documentation](https://docs.snowflake.com/en/user-guide/oauth-oidc) to set up OIDC authentication for your Snowflake account and configure the GitHub OIDC provider.
 
 2. **Store your Snowflake account in GitHub secrets**:
 
    Store your Snowflake account identifier in GitHub Secrets. Refer to the [GitHub Actions documentation](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) for detailed instructions.
 
-3. **Configure the Snowflake CLI Action with workload identity**:
+3. **Configure the Snowflake CLI Action with OIDC authentication**:
 
    ```yaml
-   name: Snowflake WIF
+   name: Snowflake OIDC
    on: [push]
    
    permissions:
-     id-token: write
+     id-token: write  # Required for OIDC token generation
    
    jobs:
-     federated-job:
+     oidc-job:
        runs-on: ubuntu-latest
        steps:
          - uses: actions/checkout@v4
@@ -79,13 +77,9 @@ To set up workload identity federation, follow these steps:
            run: snow connection test -x
    ```
 
-4. **Ensure proper workflow permissions**:
-
-   Make sure your GitHub repository has the necessary permissions to generate OIDC tokens. This is typically configured automatically when using workload identity federation.
-
 ### Alternative authentication methods
 
-The following methods can be used as alternatives to workload identity federation:
+The following methods can be used as alternatives to OIDC authentication:
 
 #### Prerequisites for key-based authentication
 
