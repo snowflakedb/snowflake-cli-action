@@ -19,13 +19,13 @@ inputs:
     description: "GitHub branch, tag, or commit to install from (if set, installs from GitHub; otherwise, installs from PyPI)"
     required: false
 
-  use-workload-identity:
-    description: "Enable workload identity authentication"
+  use-oidc:
+    description: "Enable OIDC authentication"
     required: false
     default: "false"
 
-  workload-identity-token-name:
-    description: "Name of the token environment variable for workload identity"
+  oidc-token-name:
+    description: "Name of the token environment variable for OIDC authentication"
     required: false
     default: "SNOWFLAKE_TOKEN"
 
@@ -71,12 +71,12 @@ runs:
       env:
         CONFIG_FILE_PATH: ${{ inputs.default-config-file-path }}
     - name: Set up workload identity authentication
-      if: ${{ inputs.use-workload-identity == 'true' }}
+      if: ${{ inputs.use-oidc == 'true' }}
       shell: bash
       run: |
         echo "SF_ENABLE_EXPERIMENTAL_AUTHENTICATION=true" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUDIENCE=${{ inputs.oidc-audience }}" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUTHENTICATOR=WORKLOAD_IDENTITY" >> "$GITHUB_ENV"
-        TOKEN_NAME_UPPER=$(echo ${{ inputs.workload-identity-token-name }} | tr '[:lower:]' '[:upper:]')
+        TOKEN_NAME_UPPER=$(echo ${{ inputs.oidc-token-name }} | tr '[:lower:]' '[:upper:]')
         echo "${TOKEN_NAME_UPPER}=$(snow auth workload-identity read-token --type=github)" >> "$GITHUB_ENV"
 

@@ -22,9 +22,9 @@ The branch, tag, or commit to install from if you want to install the CLI direct
 
 > **Note:** `cli-version` and `custom-github-ref` cannot be used together. Please specify only one of these arguments at a time.
 
-### `use-workload-identity`
+### `use-oidc`
 
-Boolean flag to enable workload identity federation for authentication. When set to `true`, the action will configure the CLI to use GitHub's OIDC token for authentication with Snowflake, eliminating the need for storing private keys as secrets. Default is `false`.
+Boolean flag to enable OIDC authentication. When set to `true`, the action will configure the CLI to use GitHub's OIDC token for authentication with Snowflake, eliminating the need for storing private keys as secrets. Default is `false`.
 
 ### `python-version`
 
@@ -71,7 +71,7 @@ To set up workload identity federation, follow these steps:
          - name: Setup Snowflake cli
            uses: snowflakedb/snowflake-cli-action@v2.0
            with:
-             use-workload-identity: true
+             use-oidc: true
              python-version: "3.10"
          - name: test connection
            env:
@@ -79,7 +79,7 @@ To set up workload identity federation, follow these steps:
            run: snow connection test -x
    ```
 
-4. **Ensure proper repository permissions**:
+4. **Ensure proper workflow permissions**:
 
    Make sure your GitHub repository has the necessary permissions to generate OIDC tokens. This is typically configured automatically when using workload identity federation.
 
