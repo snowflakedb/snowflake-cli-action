@@ -1,6 +1,6 @@
 ﻿# action.yml
 name: "Install Snowflake CLI"
-description: "Download and install snowflake-cli through pipx"
+description: "Download and install snowflake-cli through uv"
 branding:
   icon: "terminal"
   color: "blue"
@@ -53,6 +53,11 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
 
+    - name: Install the latest version of uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        version: "latest"
+
     - name: add extra telemetry data
       shell: bash
       run: echo "SF_GITHUB_ACTION=true" >> "$GITHUB_ENV"
@@ -65,11 +70,13 @@ runs:
       env:
         CLI_VERSION: ${{ inputs.cli-version }}
         CUSTOM_GITHUB_REF: ${{ inputs.custom-github-ref }}
+
     - name: Set up config.toml
       shell: bash
       run: bash $GITHUB_ACTION_PATH/scripts/setup-config-file.sh
       env:
         CONFIG_FILE_PATH: ${{ inputs.default-config-file-path }}
+
     - name: Set up workload identity authentication
       if: ${{ inputs.use-oidc == 'true' }}
       shell: bash
@@ -78,5 +85,4 @@ runs:
         echo "SNOWFLAKE_AUDIENCE=${{ inputs.oidc-audience }}" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUTHENTICATOR=WORKLOAD_IDENTITY" >> "$GITHUB_ENV"
         TOKEN_NAME_UPPER=$(echo ${{ inputs.oidc-token-name }} | tr '[:lower:]' '[:upper:]')
-        echo "${TOKEN_NAME_UPPER}=$(snow auth workload-identity read-token --type=github)" >> "$GITHUB_ENV"
-
+        echo "${TOKEN_NAME_UPPER}=$(snow auth oidc read-token --type=github)" >> "$GITHUB_ENV"
