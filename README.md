@@ -62,6 +62,7 @@ To set up OIDC authentication, follow these steps:
    jobs:
      oidc-job:
        runs-on: ubuntu-latest
+       environment: test-env # this should match the environment used in subject
        steps:
          - uses: actions/checkout@v4
            with:
@@ -97,7 +98,7 @@ These steps are a prerequisite for both key-based methods:
 
 To set up Snowflake credentials for a temporary connection, follow these steps.
 
-1.  **Map secrets to environment variables**:
+1. **Map secrets to environment variables**:
 
     Map each secret to an [environment variable](https://docs.snowflake.com/en/developer-guide/snowflake-cli/connecting/configure-connections#use-environment-variables-for-snowflake-credentials) using the format `SNOWFLAKE_<key>=<value>`. For example:
 
@@ -107,7 +108,7 @@ To set up Snowflake credentials for a temporary connection, follow these steps.
       SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
     ```
 
-2.  **Configure the Snowflake CLI Action**:
+2. **Configure the Snowflake CLI Action**:
     If you want to use the latest version, you don't need to include the `cli-version` parameter. Otherwise, include it along with a specific version.
 
     Example:
@@ -118,7 +119,7 @@ To set up Snowflake credentials for a temporary connection, follow these steps.
         cli-version: "3.6.0"
     ```
 
-3.  **[Optional] Set up a passphrase if private key is encrypted**:
+3. **[Optional] Set up a passphrase if private key is encrypted**:
 
     Add an environment variable named `PRIVATE_KEY_PASSPHRASE` and set it to the private key passphrase. This passphrase is used by Snowflake to decrypt the private key.
 
@@ -131,7 +132,7 @@ To set up Snowflake credentials for a temporary connection, follow these steps.
         snow connection test -x
     ```
 
-4.  **[Extra] Use a password instead of a private key**:
+4. **[Extra] Use a password instead of a private key**:
 
      Unset the environment variable `SNOWFLAKE_AUTHENTICATOR`, and then add a new variable with the password as follows:
 
@@ -210,7 +211,6 @@ To set up Snowflake credentials for a specific connection, follow these steps.
    ```
 
    > **Note**: To enhance your experience when using a password and MFA, it is recommended to configure MFA caching. For more information, refer to the [Snowflake CLI documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli/connecting/configure-connections#use-multi-factor-authentication-mfa).
-
 
 ## Usage examples
 
