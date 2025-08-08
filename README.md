@@ -44,7 +44,7 @@ To set up OIDC authentication, follow these steps:
 
 1. **Configure OIDC authentication in Snowflake**:
 
-   Follow the [Snowflake documentation](https://docs.snowflake.com/en/user-guide/oauth-oidc) to set up OIDC authentication for your Snowflake account and configure the GitHub OIDC provider.
+   Follow the [Snowflake documentation](https://docs.snowflake.com/en/user-guide/) to set up OIDC authentication for your Snowflake account and configure the GitHub OIDC provider.
 
 2. **Store your Snowflake account in GitHub secrets**:
 
