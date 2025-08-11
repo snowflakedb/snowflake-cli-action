@@ -26,9 +26,6 @@ The branch, tag, or commit to install from if you want to install the CLI direct
 
 Boolean flag to enable OIDC authentication. When set to `true`, the action will configure the CLI to use GitHub's OIDC token for authentication with Snowflake, eliminating the need for storing private keys as secrets. Default is `false`.
 
-### `python-version`
-
-The Python version to use when installing the Snowflake CLI. For example `3.10`. If not provided, the default Python version available in the runner environment is used.
 
 ### `default-config-file-path`
 
