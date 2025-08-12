@@ -56,7 +56,7 @@ runs:
       run: uv tool install snowflake-cli==${{ inputs.cli-version }}
 
     - name: Install snowflake-cli (custom ref)
-      if: ${{ inputs.cli-version == '' && inupts.custom-github-ref != '' }}
+      if: ${{ inputs.cli-version == '' && inputs.custom-github-ref != '' }}
       shell: bash
       run: uv tool install "git+https://github.com/snowflakedb/snowflake-cli.git@${{ inputs.custom-github-ref }}"
 
