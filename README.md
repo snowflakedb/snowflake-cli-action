@@ -34,6 +34,8 @@ Path to the configuration file (`config.toml`) in your repository. The path must
 
 ### Use OIDC authentication
 
+_Requires Snowflake-CLI version 3.11 or above._
+
 OIDC authentication provides a secure and modern way to authenticate with Snowflake without storing private keys as secrets. This approach uses GitHub's OIDC (OpenID Connect) token to authenticate with Snowflake.
 
 To set up OIDC authentication, follow these steps:
