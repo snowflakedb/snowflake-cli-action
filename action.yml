@@ -1,6 +1,6 @@
 ﻿# action.yml
 name: "Install Snowflake CLI"
-description: "Download and install snowflake-cli through uv"
+description: "Download and install snowflake-cli"
 branding:
   icon: "terminal"
   color: "blue"
@@ -25,14 +25,12 @@ inputs:
     default: "false"
 
   oidc-token-name:
-    description: "Name of the token environment variable for OIDC authentication"
+    description: >-
+      "Name of the token environment variable for OIDC authentication."
+      " By default it's set for [temporary connections](https://github.com/snowflakedb/snowflake-cli-action/pull/53/files#r2231644092), "
+      "however it can be changed to SNOWFLAKE_CONNECTIONS_<NAME>_TOKEN to work with named connections."
     required: false
     default: "SNOWFLAKE_TOKEN"
-
-  oidc-audience:
-    description: "OIDC audience for workload identity authentication"
-    required: false
-    default: "snowflakecomputing.com"
 
 runs:
   using: "composite"
@@ -61,7 +59,7 @@ runs:
       shell: bash
       run: |
         echo "SF_ENABLE_EXPERIMENTAL_AUTHENTICATION=true" >> "$GITHUB_ENV"
-        echo "SNOWFLAKE_AUDIENCE=${{ inputs.oidc-audience }}" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUTHENTICATOR=WORKLOAD_IDENTITY" >> "$GITHUB_ENV"
+        echo "SNOWFLAKE_AUDIENCE=snowflakecomputing.com" >> "$GITHUB_ENV"
         TOKEN_NAME_UPPER=$(echo ${{ inputs.oidc-token-name }} | tr '[:lower:]' '[:upper:]')
         echo "${TOKEN_NAME_UPPER}=$(snow auth oidc read-token --type=github)" >> "$GITHUB_ENV"
