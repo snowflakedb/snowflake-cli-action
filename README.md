@@ -55,6 +55,7 @@ To set up OIDC authentication, follow these steps:
    
    permissions:
      id-token: write  # Required for OIDC token generation
+     contents: read
    
    jobs:
      oidc-job:
@@ -68,7 +69,6 @@ To set up OIDC authentication, follow these steps:
            uses: snowflakedb/snowflake-cli-action@v2.0
            with:
              use-oidc: true
-             python-version: "3.10"
          - name: test connection
            env:
              SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
