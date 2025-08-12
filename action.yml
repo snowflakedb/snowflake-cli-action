@@ -27,7 +27,7 @@ inputs:
   oidc-token-name:
     description: >-
       "Name of the token environment variable for OIDC authentication."
-      " By default it's set for [temporary connections](https://github.com/snowflakedb/snowflake-cli-action/pull/53/files#r2231644092), "
+      " By default it's set for [temporary connections](https://docs.snowflake.com/en/developer-guide/snowflake-cli/connecting/configure-connections#use-a-temporary-connection), "
       "however it can be changed to SNOWFLAKE_CONNECTIONS_<NAME>_TOKEN to work with named connections."
     required: false
     default: "SNOWFLAKE_TOKEN"
