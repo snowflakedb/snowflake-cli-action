@@ -60,6 +60,11 @@ runs:
       shell: bash
       run: uv tool install "git+https://github.com/snowflakedb/snowflake-cli.git@${{ inputs.custom-github-ref }}"
 
+    - name: Install snowflake-cli (latest release)
+      if: ${{ inputs.cli-version == '' && inputs.custom-github-ref == '' }}
+      shell: bash
+      run: uv tool install snowflake-cli
+
     - name: Set up config.toml
       shell: bash
       run: bash $GITHUB_ACTION_PATH/scripts/setup-config-file.sh
