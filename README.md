@@ -70,6 +70,7 @@ To set up OIDC authentication, follow these steps:
            uses: snowflakedb/snowflake-cli-action@v2.0
            with:
              use-oidc: true
+             cli-version: "3.11"
          - name: test connection
            env:
              SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
