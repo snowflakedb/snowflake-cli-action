@@ -75,7 +75,6 @@ runs:
       if: ${{ inputs.use-oidc == 'true' }}
       shell: bash
       run: |
-        echo "SF_ENABLE_EXPERIMENTAL_AUTHENTICATION=true" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUTHENTICATOR=WORKLOAD_IDENTITY" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_WORKLOAD_IDENTITY_PROVIDER=OIDC" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUDIENCE=snowflakecomputing.com" >> "$GITHUB_ENV"
