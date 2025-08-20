@@ -55,17 +55,15 @@ To set up OIDC authentication, follow these steps:
    ```
 
    By default your subject should look like `repo:<repository-owner/repository-name>:environment:<environment>`.
-   You can use `gh` tool to simplify generation of subject:
+   You can use `gh` tool to simplify generation of subject, where `<environment_name>` is your env defined in your repository settings.
 
    ```shell
    gh repo view snowflakedb/mraba-polygon --json nameWithOwner | jq -r '"repo:\(.nameWithOwner):environment:<environment_name>"'
    ```
 
-   where `<environment_name>` is your env defined in your repository settings.
+   - _For more information about customization your subject, see [OpenID Connect reference](https://docs.github.com/en/actions/reference/security/oidc) on GitHub._
 
-   For more information about customization your subject, see [OpenID Connect reference](https://docs.github.com/en/actions/reference/security/oidc) on GitHub.
-
-   Follow more details, see the [Snowflake documentation](https://docs.snowflake.com/en/user-guide/workload-identity-federation) to set up OIDC authentication for your Snowflake account and configure the GitHub OIDC provider.
+   - _Follow more details, see the [Snowflake documentation](https://docs.snowflake.com/en/user-guide/workload-identity-federation) to set up OIDC authentication for your Snowflake account and configure the GitHub OIDC provider._
 
 2. **Store your Snowflake account in GitHub secrets**:
 
