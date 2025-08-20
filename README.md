@@ -42,7 +42,30 @@ To set up OIDC authentication, follow these steps:
 
 1. **Configure OIDC authentication in Snowflake**:
 
-   Follow the [Snowflake documentation](https://docs.snowflake.com/en/user-guide/workload-identity-federation) to set up OIDC authentication for your Snowflake account and configure the GitHub OIDC provider.
+   You need to setup service user with OIDC workload identity type
+
+   ```sql
+   CREATE USER <username>
+   TYPE = SERVICE
+   WORKLOAD_IDENTITY = (
+     TYPE = OIDC
+     ISSUER = 'https://token.actions.githubusercontent.com'
+     SUBJECT = <your_subject>
+   )
+   ```
+
+   By default your subject should look like `repo:<repository-owner/repository-name>:environment:<environment>`.
+   You can use `gh` tool to simplify generation of subject:
+
+   ```shell
+   gh repo view snowflakedb/mraba-polygon --json nameWithOwner | jq -r '"repo:\(.nameWithOwner):environment:<environment_name>"'
+   ```
+
+   where `<environment_name>` is your env defined in your repository settings.
+
+   For more information about customization your subject, see [OpenID Connect reference](https://docs.github.com/en/actions/reference/security/oidc) on GitHub.
+
+   Follow more details, see the [Snowflake documentation](https://docs.snowflake.com/en/user-guide/workload-identity-federation) to set up OIDC authentication for your Snowflake account and configure the GitHub OIDC provider.
 
 2. **Store your Snowflake account in GitHub secrets**:
 
