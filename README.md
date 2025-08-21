@@ -50,7 +50,7 @@ To set up OIDC authentication, follow these steps:
    WORKLOAD_IDENTITY = (
      TYPE = OIDC
      ISSUER = 'https://token.actions.githubusercontent.com'
-     SUBJECT = <your_subject>
+     SUBJECT = '<your_subject>'
    )
    ```
 
@@ -58,7 +58,7 @@ To set up OIDC authentication, follow these steps:
    You can use `gh` tool to simplify generation of subject, where `<environment_name>` is your env defined in your repository settings.
 
    ```shell
-   gh repo view snowflakedb/mraba-polygon --json nameWithOwner | jq -r '"repo:\(.nameWithOwner):environment:<environment_name>"'
+   gh repo view <repository-owner/repository-name> --json nameWithOwner | jq -r '"repo:\(.nameWithOwner):environment:<environment_name>"'
    ```
 
    - _For more information about customization your subject, see [OpenID Connect reference](https://docs.github.com/en/actions/reference/security/oidc) on GitHub._
