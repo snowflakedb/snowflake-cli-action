@@ -41,7 +41,7 @@ runs:
 
     - uses: astral-sh/setup-uv@v6
       with:
-        python-version: "3.12"
+        python-version: "3.11"
 
     - name: Either cli-version or custom-github-ref allowed
       if: ${{ inputs.cli-version != '' && inputs.custom-github-ref != '' }}
