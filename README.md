@@ -22,13 +22,89 @@ The branch, tag, or commit to install from if you want to install the CLI direct
 
 > **Note:** `cli-version` and `custom-github-ref` cannot be used together. Please specify only one of these arguments at a time.
 
+### `use-oidc`
+
+Boolean flag to enable OIDC authentication. When set to `true`, the action will configure the CLI to use GitHub's OIDC token for authentication with Snowflake, eliminating the need for storing private keys as secrets. Default is `false`.
+
 ### `default-config-file-path`
 
 Path to the configuration file (`config.toml`) in your repository. The path must be relative to root of repository. The configuration file is not required when using a temporary connection (`-x` flag). Refer to the [Snowflake CLI documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli/connecting/configure-connections#use-a-temporary-connection) for more details.
 
 ## Safely configure the action in your CI/CD workflow
 
-These steps are a prerequisite for both methods:
+### Use WIF OIDC authentication
+
+_Requires Snowflake-CLI version 3.11 or above._
+
+WIF OIDC authentication provides a secure and modern way to authenticate with Snowflake without storing private keys as secrets. This approach uses GitHub's OIDC (OpenID Connect) token to authenticate with Snowflake.
+
+To set up WIF OIDC authentication, follow these steps:
+
+1. **Configure WIF OIDC authentication in Snowflake**:
+
+   You need to setup service user with OIDC workload identity type
+
+   ```sql
+   CREATE USER <username>
+   TYPE = SERVICE
+   WORKLOAD_IDENTITY = (
+     TYPE = OIDC
+     ISSUER = 'https://token.actions.githubusercontent.com'
+     SUBJECT = '<your_subject>'
+   )
+   ```
+
+   By default your subject should look like `repo:<repository-owner/repository-name>:environment:<environment>`.
+   You can use `gh` tool to simplify generation of subject, where `<environment_name>` is your env defined in your repository settings.
+
+   ```shell
+   gh repo view <repository-owner/repository-name> --json nameWithOwner | jq -r '"repo:\(.nameWithOwner):environment:<environment_name>"'
+   ```
+
+   - _For more information about customizing your subject, see [OpenID Connect reference](https://docs.github.com/en/actions/reference/security/oidc) on GitHub._
+
+   - _Follow more details, see the [Snowflake documentation](https://docs.snowflake.com/en/user-guide/workload-identity-federation) to set up OIDC authentication for your Snowflake account and configure the GitHub OIDC provider._
+
+2. **Store your Snowflake account in GitHub secrets**:
+
+   Store your Snowflake account identifier in GitHub Secrets. Refer to the [GitHub Actions documentation](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) for detailed instructions.
+
+3. **Configure the Snowflake CLI Action with OIDC authentication**:
+
+   ```yaml
+   name: Snowflake OIDC
+   on: [push]
+   
+   permissions:
+     id-token: write  # Required for OIDC token generation
+     contents: read
+   
+   jobs:
+     oidc-job:
+       runs-on: ubuntu-latest
+       environment: test-env # this should match the environment used in subject
+       steps:
+         - uses: actions/checkout@v4
+           with:
+             persist-credentials: false
+         - name: Setup Snowflake cli
+           uses: snowflakedb/snowflake-cli-action@v2.0
+           with:
+             use-oidc: true
+             cli-version: "3.11"
+         - name: test connection
+           env:
+             SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+           run: snow connection test -x
+   ```
+
+### Alternative authentication methods
+
+The following methods can be used as alternatives to OIDC authentication:
+
+#### Prerequisites for key-based authentication
+
+These steps are a prerequisite for both key-based methods:
 
 1. **Generate a private key**:
 
@@ -38,11 +114,11 @@ These steps are a prerequisite for both methods:
 
    Store each credential, such as account, private key, and passphrase in GitHub Secrets. Refer to the [GitHub Actions documentation](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) for detailed instructions on how to create and manage secrets for your repository.
 
-### Use a temporary connection
+#### Use a temporary connection
 
 To set up Snowflake credentials for a temporary connection, follow these steps.
 
-1.  **Map secrets to environment variables**:
+1. **Map secrets to environment variables**:
 
     Map each secret to an [environment variable](https://docs.snowflake.com/en/developer-guide/snowflake-cli/connecting/configure-connections#use-environment-variables-for-snowflake-credentials) using the format `SNOWFLAKE_<key>=<value>`. For example:
 
@@ -52,7 +128,7 @@ To set up Snowflake credentials for a temporary connection, follow these steps.
       SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
     ```
 
-2.  **Configure the Snowflake CLI Action**:
+2. **Configure the Snowflake CLI Action**:
     If you want to use the latest version, you don't need to include the `cli-version` parameter. Otherwise, include it along with a specific version.
 
     Example:
@@ -63,7 +139,7 @@ To set up Snowflake credentials for a temporary connection, follow these steps.
         cli-version: "3.6.0"
     ```
 
-3.  **[Optional] Set up a passphrase if private key is encrypted**:
+3. **[Optional] Set up a passphrase if private key is encrypted**:
 
     Add an environment variable named `PRIVATE_KEY_PASSPHRASE` and set it to the private key passphrase. This passphrase is used by Snowflake to decrypt the private key.
 
@@ -76,7 +152,7 @@ To set up Snowflake credentials for a temporary connection, follow these steps.
         snow connection test -x
     ```
 
-4.  **[Extra] Use a password instead of a private key**:
+4. **[Extra] Use a password instead of a private key**:
 
      Unset the environment variable `SNOWFLAKE_AUTHENTICATOR`, and then add a new variable with the password as follows:
 
@@ -91,7 +167,7 @@ To set up Snowflake credentials for a temporary connection, follow these steps.
 
 For more information in setting Snowflake credentials using environment variables, refer to the [Snowflake CLI documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli-v2/connecting/specify-credentials#how-to-use-environment-variables-for-snowflake-credentials). And the instructions on defining environment variables within your Github CI/CD workflow can be found [here](https://docs.github.com/en/actions/learn-github-actions/variables#defining-environment-variables-for-a-single-workflow).
 
-### Use a configuration file
+#### Use a configuration file
 
 To set up Snowflake credentials for a specific connection, follow these steps.
 
@@ -155,7 +231,6 @@ To set up Snowflake credentials for a specific connection, follow these steps.
    ```
 
    > **Note**: To enhance your experience when using a password and MFA, it is recommended to configure MFA caching. For more information, refer to the [Snowflake CLI documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli/connecting/configure-connections#use-multi-factor-authentication-mfa).
-
 
 ## Usage examples
 
