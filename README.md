@@ -32,15 +32,15 @@ Path to the configuration file (`config.toml`) in your repository. The path must
 
 ## Safely configure the action in your CI/CD workflow
 
-### Use OIDC authentication
+### Use WIF OIDC authentication
 
 _Requires Snowflake-CLI version 3.11 or above._
 
-OIDC authentication provides a secure and modern way to authenticate with Snowflake without storing private keys as secrets. This approach uses GitHub's OIDC (OpenID Connect) token to authenticate with Snowflake.
+WIF OIDC authentication provides a secure and modern way to authenticate with Snowflake without storing private keys as secrets. This approach uses GitHub's OIDC (OpenID Connect) token to authenticate with Snowflake.
 
-To set up OIDC authentication, follow these steps:
+To set up WIF OIDC authentication, follow these steps:
 
-1. **Configure OIDC authentication in Snowflake**:
+1. **Configure WIF OIDC authentication in Snowflake**:
 
    You need to setup service user with OIDC workload identity type
 
