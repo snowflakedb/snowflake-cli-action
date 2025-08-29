@@ -54,12 +54,7 @@ To set up WIF OIDC authentication, follow these steps:
    )
    ```
 
-   By default your subject should look like `repo:<repository-owner/repository-name>:environment:<environment>`.
-   You can use `gh` tool to simplify generation of subject, where `<environment_name>` is your env defined in your repository settings.
-
-   ```shell
-   gh repo view <repository-owner/repository-name> --json nameWithOwner | jq -r '"repo:\(.nameWithOwner):environment:<environment_name>"'
-   ```
+   - _For examples of see [Example subject claims](https://docs.github.com/en/actions/reference/security/oidc#example-subject-claims) on GitHub._
 
    - _For more information about customizing your subject, see [OpenID Connect reference](https://docs.github.com/en/actions/reference/security/oidc) on GitHub._
 
@@ -82,7 +77,6 @@ To set up WIF OIDC authentication, follow these steps:
    jobs:
      oidc-job:
        runs-on: ubuntu-latest
-       environment: test-env # this should match the environment used in subject
        steps:
          - uses: actions/checkout@v4
            with:
