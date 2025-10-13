@@ -39,7 +39,7 @@ runs:
       shell: bash
       run: echo "SF_GITHUB_ACTION=true" >> "$GITHUB_ENV"
 
-    - uses: astral-sh/setup-uv@v6
+    - uses: astral-sh/setup-uv@v7
       with:
         python-version: "3.11"
 
