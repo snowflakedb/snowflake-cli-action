@@ -16,7 +16,7 @@ jobs:
           - '3.13'
     name: Install Snowflake CLI from main branch in ${{ matrix.os }} with Python ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - name: Set up Python ${{ matrix.python-version }}
