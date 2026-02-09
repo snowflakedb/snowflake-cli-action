@@ -1,4 +1,4 @@
-﻿# action.yml
+# action.yml
 name: "Install Snowflake CLI"
 description: "Download and install snowflake-cli"
 branding:
@@ -39,7 +39,7 @@ runs:
       shell: bash
       run: echo "SF_GITHUB_ACTION=true" >> "$GITHUB_ENV"
 
-    - uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 #v7.1.6
+    - uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b #v7.3.0
       with:
         python-version: "3.11"
 
