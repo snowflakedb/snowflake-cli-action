@@ -5,14 +5,11 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: The new version tag
+        description: The new version tag (e.g. v2.1.0)
         required: true
       major_tag:
-        type: choice
-        description: The major tag to update
-        options:
-          - v1
-          - v2
+        description: The major tag to update (e.g. v2)
+        required: true
 
 jobs:
   tag:
@@ -20,10 +17,35 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
+
+      - name: Validate major tag format
+        run: |
+          if [[ ! "$MAJOR_TAG" =~ ^v[0-9]+$ ]]; then
+            echo "::error::major_tag must match 'vN' (e.g. v1, v2, v3)"
+            exit 1
+          fi
+        env:
+          MAJOR_TAG: ${{ github.event.inputs.major_tag }}
+
+      - name: Validate target tag exists
+        run: |
+          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "::error::Tag $TAG does not exist"
+            exit 1
+          fi
+        env:
+          TAG: ${{ github.event.inputs.tag }}
+
       - name: Update tag
-        run: git tag -f ${{ github.event.inputs.major_tag }} ${{ github.event.inputs.tag }}
+        run: git tag -f "$MAJOR_TAG" "$TAG"
+        env:
+          TAG: ${{ github.event.inputs.tag }}
+          MAJOR_TAG: ${{ github.event.inputs.major_tag }}
+
       - name: Push tag
-        run: git push origin ${{ github.event.inputs.major_tag }} --force
+        run: git push origin "$MAJOR_TAG" --force
+        env:
+          MAJOR_TAG: ${{ github.event.inputs.major_tag }}
