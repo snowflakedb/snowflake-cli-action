@@ -37,7 +37,12 @@ runs:
   steps:
     - name: add extra telemetry data
       shell: bash
-      run: echo "SF_GITHUB_ACTION=true" >> "$GITHUB_ENV"
+      env:
+        # Bump on each release to match the repository tag
+        SF_CICD_INTEGRATION_VERSION: "v2.0"
+      run: |
+        echo "SF_GITHUB_ACTION=true" >> "$GITHUB_ENV"
+        echo "SF_CICD_INTEGRATION_VERSION=$SF_CICD_INTEGRATION_VERSION" >> "$GITHUB_ENV"
 
     - uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 #v7.1.6
       with:
