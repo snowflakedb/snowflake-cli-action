@@ -39,6 +39,16 @@ jobs:
         env:
           TAG: ${{ github.event.inputs.tag }}
 
+      - name: Validate tag is reachable from main
+        run: |
+          TAG_COMMIT=$(git rev-parse "$TAG^{commit}")
+          if ! git merge-base --is-ancestor "$TAG_COMMIT" origin/main; then
+            echo "::error::Tag $TAG points to commit $TAG_COMMIT which is not reachable from the main branch. Tags must only reference commits on main."
+            exit 1
+          fi
+        env:
+          TAG: ${{ github.event.inputs.tag }}
+
       - name: Update tag
         run: git tag -f "$MAJOR_TAG" "$TAG"
         env:
