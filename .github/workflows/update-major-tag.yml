@@ -17,6 +17,16 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Verify caller is a repo admin
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PERMISSION=$(gh api repos/${{ github.repository }}/collaborators/${{ github.actor }}/permission --jq '.permission')
+          if [[ "$PERMISSION" != "admin" ]]; then
+            echo "::error::Only repository admins can trigger this workflow. Current permission: $PERMISSION"
+            exit 1
+          fi
+
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
