@@ -1,0 +1,49 @@
+name: Compatibility — latest Snowflake CLI
+
+# Runs the action against the latest published Snowflake CLI release on a
+# daily schedule so a CLI release that breaks the wrapper is detected within
+# the 48-hour SLO defined in the Native CI/CD Integrations ORR (§2.2, §7.4).
+#
+# Scheduled (not release-triggered) because the Snowflake CLI lives in a
+# different repository (snowflakedb/snowflake-cli); scheduling here avoids a
+# cross-repo release webhook. Daily cadence comfortably meets 48 h.
+
+on:
+  schedule:
+    # 06:17 UTC — slightly off the hour to avoid GitHub-Actions cron spikes.
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install-latest:
+    name: Install latest CLI on ${{ matrix.os }} / py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.10', '3.13']
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Snowflake CLI via this action (latest release)
+        uses: ./
+        # cli-version omitted → action installs the latest release from PyPI.
+
+      - name: Smoke-test installed CLI
+        shell: bash
+        run: |
+          set -e
+          snow --version
+          snow --help > /dev/null
+          snow connection list > /dev/null
