@@ -1,18 +1,12 @@
 # Snowflake CLI Github Actions
 
 > [!IMPORTANT]
-> **This action has moved to [`snowflakedb/snowflake-actions`](https://github.com/snowflakedb/snowflake-actions).**
->
-> `snowflake-actions` is the new home for Snowflake's first-party GitHub Actions — this CLI setup action plus a growing family of sub-actions (DCM, and more) under one namespace. **`snowflakedb/snowflake-cli-action` is deprecated** and will be archived after a ~6-month migration window.
->
-> **To migrate, swap your `uses:` line. The inputs are identical:**
+> **This action has moved to [`snowflakedb/snowflake-actions`](https://github.com/snowflakedb/snowflake-actions) and is deprecated.** To migrate, swap your `uses:` line — the inputs are identical:
 >
 > ```diff
 > - - uses: snowflakedb/snowflake-cli-action@v2
 > + - uses: snowflakedb/snowflake-actions@v2
 > ```
->
-> Existing workflows pinned to `snowflake-cli-action` keep working during the migration window, and the underlying Snowflake CLI carries a minimum 2-year support policy — pinned workflows won't break at archive. See [`snowflakedb/snowflake-actions`](https://github.com/snowflakedb/snowflake-actions) for the full list of actions and usage.
 
 ## Usage
 
