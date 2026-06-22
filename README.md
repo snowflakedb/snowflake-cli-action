@@ -5,7 +5,7 @@
 >
 > ```diff
 > - - uses: snowflakedb/snowflake-cli-action@v2
-> + - uses: snowflakedb/snowflake-actions@v2
+> + - uses: snowflakedb/snowflake-actions@v3
 > ```
 
 ## Usage

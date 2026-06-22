@@ -1,6 +1,6 @@
 ﻿# action.yml
 name: "Install Snowflake CLI"
-description: "[Deprecated — moved to snowflakedb/snowflake-actions] Download and install snowflake-cli"
+description: "[Moved to snowflakedb/snowflake-actions] Download and install snowflake-cli"
 branding:
   icon: "terminal"
   color: "blue"
