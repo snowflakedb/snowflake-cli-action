@@ -1,6 +1,12 @@
 # Snowflake CLI Github Actions
 
-**Note:** Snowflake CLI Github Actions is in Preview.
+> [!IMPORTANT]
+> **This action has moved to [`snowflakedb/snowflake-actions`](https://github.com/snowflakedb/snowflake-actions).** To migrate, update your `uses:` line. The inputs are identical and no other changes are needed:
+>
+> ```diff
+> - - uses: snowflakedb/snowflake-cli-action@v2
+> + - uses: snowflakedb/snowflake-actions@v3
+> ```
 
 ## Usage
 
