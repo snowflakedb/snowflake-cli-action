@@ -1,7 +1,7 @@
 # Snowflake CLI Github Actions
 
 > [!IMPORTANT]
-> **This action has moved to [`snowflakedb/snowflake-actions`](https://github.com/snowflakedb/snowflake-actions).** Update your `uses:` line — the inputs are identical:
+> **This action has moved to [`snowflakedb/snowflake-actions`](https://github.com/snowflakedb/snowflake-actions).** To migrate, update your `uses:` line. The inputs are identical and no other changes are needed:
 >
 > ```diff
 > - - uses: snowflakedb/snowflake-cli-action@v2
