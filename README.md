@@ -28,9 +28,19 @@ The branch, tag, or commit to install from if you want to install the CLI direct
 
 > **Note:** `cli-version` and `custom-github-ref` cannot be used together. Please specify only one of these arguments at a time.
 
+### `cli-artifact`
+
+Path to a local Snowflake CLI wheel, sdist, or directory of wheels. Installed with `uv tool install --offline` (no PyPI). `uv` and `python3` must already be on `PATH`. Mutually exclusive with `cli-version` and `custom-github-ref`.
+
+On an air-gapped runner, preinstall `snow` on `PATH` and leave `cli-version`, `custom-github-ref`, and `cli-artifact` empty. The action reuses that binary and does not download `uv`. `cli-version: latest` still installs from PyPI.
+
 ### `use-oidc`
 
 Boolean flag to enable OIDC authentication. When set to `true`, the action will configure the CLI to use GitHub's OIDC token for authentication with Snowflake, eliminating the need for storing private keys as secrets. Default is `false`.
+
+### `oidc-audience`
+
+Audience (`aud`) claim requested for the GitHub OIDC token. Defaults to `snowflakecomputing.com`. AWS ISO and other in-zone accounts must set this to the audience their Snowflake OIDC security integration expects. The commercial default is kept for existing callers.
 
 ### `default-config-file-path`
 

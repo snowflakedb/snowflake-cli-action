@@ -19,6 +19,16 @@ inputs:
     description: "GitHub branch, tag, or commit to install from (if set, installs from GitHub; otherwise, installs from PyPI)"
     required: false
 
+  cli-artifact:
+    description: >-
+      Path to a local Snowflake CLI wheel, sdist, or directory of wheels.
+      Installed with uv --offline (no PyPI). uv and python3 must already be on PATH.
+      Mutually exclusive with cli-version and custom-github-ref. Air-gapped runners
+      can instead preinstall snow on PATH and leave cli-version, custom-github-ref,
+      and cli-artifact empty to skip the download entirely.
+    required: false
+    default: ""
+
   use-oidc:
     description: "Enable OIDC authentication"
     required: false
@@ -32,6 +42,14 @@ inputs:
     required: false
     default: "SNOWFLAKE_TOKEN"
 
+  oidc-audience:
+    description: >-
+      Audience (aud) claim requested for the GitHub OIDC token. Defaults to
+      snowflakecomputing.com. AWS ISO and other in-zone accounts must set this
+      to the audience their Snowflake OIDC security integration expects.
+    required: false
+    default: "snowflakecomputing.com"
+
 runs:
   using: "composite"
   steps:
@@ -44,31 +62,28 @@ runs:
         echo "SF_GITHUB_ACTION=true" >> "$GITHUB_ENV"
         echo "SF_CICD_INTEGRATION_VERSION=$SF_CICD_INTEGRATION_VERSION" >> "$GITHUB_ENV"
 
+    - name: Plan Snowflake CLI install
+      id: snow-plan
+      shell: bash
+      env:
+        CLI_VERSION: ${{ inputs.cli-version }}
+        CUSTOM_GITHUB_REF: ${{ inputs.custom-github-ref }}
+        CLI_ARTIFACT: ${{ inputs.cli-artifact }}
+      run: bash $GITHUB_ACTION_PATH/scripts/plan-cli-install.sh
+
     - uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 #v7.1.6
+      if: ${{ steps.snow-plan.outputs.skip_uv_setup != 'true' }}
       with:
         python-version: "3.11"
 
-    - name: Either cli-version or custom-github-ref allowed
-      if: ${{ inputs.cli-version != '' && inputs.custom-github-ref != '' }}
+    - name: Install snowflake-cli
+      if: ${{ steps.snow-plan.outputs.skip_install != 'true' }}
       shell: bash
-      run: |
-        echo "You cannot set BOTH cli-version and custom-github-ref"
-        exit 1
-
-    - name: Install snowflake-cli (specific version)
-      if: ${{ inputs.cli-version != '' && inputs.cli-version != 'latest' && inputs.custom-github-ref == '' }}
-      shell: bash
-      run: uv tool install snowflake-cli==${{ inputs.cli-version }}
-
-    - name: Install snowflake-cli (custom ref)
-      if: ${{ inputs.cli-version == '' && inputs.custom-github-ref != '' }}
-      shell: bash
-      run: uv tool install "git+https://github.com/snowflakedb/snowflake-cli.git@${{ inputs.custom-github-ref }}"
-
-    - name: Install snowflake-cli (latest release)
-      if: ${{ (inputs.cli-version == '' || inputs.cli-version == 'latest') && inputs.custom-github-ref == '' }}
-      shell: bash
-      run: uv tool install snowflake-cli
+      env:
+        CLI_VERSION: ${{ inputs.cli-version }}
+        CUSTOM_GITHUB_REF: ${{ inputs.custom-github-ref }}
+        CLI_ARTIFACT: ${{ inputs.cli-artifact }}
+      run: bash $GITHUB_ACTION_PATH/scripts/install-snowflake-cli.sh
 
     - name: Set up config.toml
       shell: bash
@@ -82,6 +97,9 @@ runs:
       run: |
         echo "SNOWFLAKE_AUTHENTICATOR=WORKLOAD_IDENTITY" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_WORKLOAD_IDENTITY_PROVIDER=OIDC" >> "$GITHUB_ENV"
-        echo "SNOWFLAKE_AUDIENCE=snowflakecomputing.com" >> "$GITHUB_ENV"
+        echo "SNOWFLAKE_AUDIENCE=${{ inputs.oidc-audience }}" >> "$GITHUB_ENV"
+        # GITHUB_ENV applies on the next step. snow auth oidc read-token runs
+        # in this step and reads SNOWFLAKE_AUDIENCE from the process environment.
+        export SNOWFLAKE_AUDIENCE="${{ inputs.oidc-audience }}"
         TOKEN_NAME_UPPER=$(echo ${{ inputs.oidc-token-name }} | tr '[:lower:]' '[:upper:]')
         echo "${TOKEN_NAME_UPPER}=$(snow auth oidc read-token --type=github)" >> "$GITHUB_ENV"
