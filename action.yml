@@ -58,12 +58,26 @@ runs:
     - name: Install snowflake-cli (specific version)
       if: ${{ inputs.cli-version != '' && inputs.cli-version != 'latest' && inputs.custom-github-ref == '' }}
       shell: bash
-      run: uv tool install snowflake-cli==${{ inputs.cli-version }}
+      env:
+        CLI_VERSION: ${{ inputs.cli-version }}
+      run: |
+        if ! [[ "$CLI_VERSION" =~ ^[0-9A-Za-z._+-]+$ ]]; then
+          echo "::error::cli-version contains disallowed characters"
+          exit 1
+        fi
+        uv tool install "snowflake-cli==${CLI_VERSION}"
 
     - name: Install snowflake-cli (custom ref)
       if: ${{ inputs.cli-version == '' && inputs.custom-github-ref != '' }}
       shell: bash
-      run: uv tool install "git+https://github.com/snowflakedb/snowflake-cli.git@${{ inputs.custom-github-ref }}"
+      env:
+        CUSTOM_GITHUB_REF: ${{ inputs.custom-github-ref }}
+      run: |
+        if ! [[ "$CUSTOM_GITHUB_REF" =~ ^[A-Za-z0-9._/-]+$ ]]; then
+          echo "::error::custom-github-ref contains disallowed characters"
+          exit 1
+        fi
+        uv tool install "git+https://github.com/snowflakedb/snowflake-cli.git@${CUSTOM_GITHUB_REF}"
 
     - name: Install snowflake-cli (latest release)
       if: ${{ (inputs.cli-version == '' || inputs.cli-version == 'latest') && inputs.custom-github-ref == '' }}
@@ -72,16 +86,22 @@ runs:
 
     - name: Set up config.toml
       shell: bash
-      run: bash $GITHUB_ACTION_PATH/scripts/setup-config-file.sh
+      run: bash "$GITHUB_ACTION_PATH/scripts/setup-config-file.sh"
       env:
         CONFIG_FILE_PATH: ${{ inputs.default-config-file-path }}
 
     - name: Set up workload identity authentication
       if: ${{ inputs.use-oidc == 'true' }}
       shell: bash
+      env:
+        OIDC_TOKEN_NAME: ${{ inputs.oidc-token-name }}
       run: |
+        if ! [[ "$OIDC_TOKEN_NAME" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+          echo "::error::oidc-token-name is not a valid environment variable name"
+          exit 1
+        fi
         echo "SNOWFLAKE_AUTHENTICATOR=WORKLOAD_IDENTITY" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_WORKLOAD_IDENTITY_PROVIDER=OIDC" >> "$GITHUB_ENV"
         echo "SNOWFLAKE_AUDIENCE=snowflakecomputing.com" >> "$GITHUB_ENV"
-        TOKEN_NAME_UPPER=$(echo ${{ inputs.oidc-token-name }} | tr '[:lower:]' '[:upper:]')
+        TOKEN_NAME_UPPER=$(echo "$OIDC_TOKEN_NAME" | tr '[:lower:]' '[:upper:]')
         echo "${TOKEN_NAME_UPPER}=$(snow auth oidc read-token --type=github)" >> "$GITHUB_ENV"
