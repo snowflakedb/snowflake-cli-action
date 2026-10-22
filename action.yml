@@ -46,6 +46,7 @@ runs:
 
     - uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 #v7.1.6
       with:
+        version: "0.13.5"
         python-version: "3.11"
 
     - name: Either cli-version or custom-github-ref allowed
